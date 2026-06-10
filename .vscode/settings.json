@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^powershell -Command \"Set-Location 'c:\\\\Users\\\\abhis\\\\Desktop\\\\quiz'; git init; git add \\.; git commit -m 'Initial quiz site commit'\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

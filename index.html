@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Student Career Assessment</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="hero">
+        <h1>Student Career Assessment</h1>
+        <p class="lead">A short 10-question assessment that recommends the most suitable professional course for you — Digital Marketing, Data Analytics, Graphics Designing, or Video Editing.</p>
+      </header>
+
+      <section id="entry" class="card">
+        <form id="entryForm">
+          <div class="field">
+            <label for="name">Student Name *</label>
+            <input id="name" name="name" type="text" required />
+          </div>
+          <div class="field">
+            <label for="email">Email *</label>
+            <input id="email" name="email" type="email" required />
+          </div>
+          <div class="field">
+            <label for="mobile">Mobile Number (optional)</label>
+            <input id="mobile" name="mobile" type="tel" />
+          </div>
+          <div class="field">
+            <label for="class">Class (optional)</label>
+            <input id="class" name="class" type="text" />
+          </div>
+          <div class="field">
+            <label for="school">School Name (optional)</label>
+            <input id="school" name="school" type="text" />
+          </div>
+          <div class="meta">✓10 questions &nbsp; ✓~3 minutes &nbsp; ✓Personalised course recommendation</div>
+          <div class="actions">
+            <button type="submit" class="btn primary">Start Assessment</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="quiz" class="card hidden">
+        <div id="quizContainer">
+          <div id="progress" class="progress">Question <span id="qIndex">1</span> of <span id="qTotal">10</span></div>
+          <form id="quizForm"></form>
+          <div class="quiz-actions">
+            <button id="prevBtn" class="btn" type="button">Previous</button>
+            <button id="nextBtn" class="btn primary" type="button">Next</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="result" class="card hidden">
+        <h2>Recommendation</h2>
+        <p id="recommendation"></p>
+        <div class="result-actions" style="margin-top:12px;display:flex;gap:8px;">
+          <button id="downloadCsv" class="btn primary">Download CSV</button>
+          <button id="retake" class="btn">Retake Assessment</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
