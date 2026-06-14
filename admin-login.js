@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const setupBtn = document.getElementById('setupBtn');
 
   function getStoredPassword(){
-    return localStorage.getItem('quiz_admin_password') || 'admin123';
+    return localStorage.getItem('quiz_admin_password') || 'dmcounslor@26';
   }
 
   form.addEventListener('submit', (e)=>{
