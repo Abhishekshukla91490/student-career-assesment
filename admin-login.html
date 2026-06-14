@@ -6,17 +6,25 @@
     <title>Admin Login</title>
     <link rel="stylesheet" href="admin.css" />
     <style>
-      .login-card{max-width:420px;margin:80px auto;padding:18px;background:#fff;border-radius:8px;border:2px solid #1A6B5E}
+      .login-card{max-width:420px;margin:80px auto;padding:22px 22px 20px;background:#fff;border-radius:16px;border:2px solid #1A6B5E}
       .login-card h2{margin-top:0;color:#1A6B5E;border-bottom:3px solid #FFC107;padding-bottom:12px}
-      .field{margin:8px 0}
+      .field{margin:10px 0}
       .field label{color:#1A6B5E;font-weight:600}
-      .field input{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px}
+      .field input{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px}
       .hint{font-size:13px;color:#666;margin-top:8px}
+      .brand-logo{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+      .logo-mark{width:44px;height:44px;border-radius:14px;background:#1A6B5E;color:#fff;display:grid;place-items:center;font-weight:800;font-size:18px;box-shadow:0 10px 30px rgba(0,0,0,0.12)}
+      .logo-text{font-size:14px;line-height:1.1;color:#1A6B5E}
+      .logo-text strong{display:block;font-size:16px}
     </style>
   </head>
   <body>
     <main class="admin-container">
       <div class="login-card">
+        <div class="brand-logo">
+          <div class="logo-mark">DM</div>
+          <div class="logo-text"><strong>Dizital</strong> Mantras</div>
+        </div>
         <h2>Admin Login</h2>
         <form id="loginForm">
           <div class="field">
