@@ -1,7 +1,8 @@
 :root{
-  --bg:#f6f8fb;
+  --bg:#f5f7fa;
   --card:#ffffff;
-  --accent:#4a90e2;
+  --accent:#FFC107;
+  --primary:#1A6B5E;
   --muted:#6b7280;
   --radius:12px;
 }
@@ -9,9 +10,9 @@
 body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:var(--bg);color:#0f172a}
 .container{max-width:820px;margin:32px auto;padding:20px}
 .hero{text-align:center;margin-bottom:18px}
-.hero{background:linear-gradient(90deg,#f5f8ff 0%, #ffffff 100%);padding:18px;border-radius:12px}
-.hero h1{margin:0;font-size:28px;color:#0b3a66}
-.hero .lead{color:var(--muted);margin-top:8px;max-width:680px;margin-left:auto;margin-right:auto}
+.hero{background:linear-gradient(90deg,#1A6B5E 0%, #2A8B7E 100%);padding:18px;border-radius:12px}
+.hero h1{margin:0;font-size:28px;color:#ffffff}
+.hero .lead{color:#f0f0f0;margin-top:8px;max-width:680px;margin-left:auto;margin-right:auto}
 .card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:0 6px 18px rgba(15,23,42,0.06);margin-bottom:16px}
 .field{display:flex;flex-direction:column;margin-bottom:12px}
 .field label{font-weight:600;margin-bottom:6px}
@@ -19,14 +20,14 @@ body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;backg
 .meta{color:var(--muted);margin:8px 0}
 .actions{display:flex;justify-content:flex-end}
 .btn{padding:10px 14px;border-radius:8px;border:1px solid transparent;background:#f3f4f6;cursor:pointer}
-.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 6px 18px rgba(74,144,226,0.18)}
+.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 6px 18px rgba(26,107,94,0.18)}
 .btn:disabled{opacity:0.6;cursor:not-allowed}
 .hidden{display:none}
 .progress{font-weight:600;margin-bottom:12px}
 .quiz-actions{display:flex;justify-content:space-between;margin-top:14px}
 .option{padding:12px;border:1px solid #e6eef6;border-radius:10px;margin-bottom:10px;display:flex;align-items:center;transition:box-shadow .15s,transform .08s}
 .option input{margin-right:12px}
-.option:hover{box-shadow:0 6px 18px rgba(15,23,42,0.06);transform:translateY(-2px)}
+.option:hover{box-shadow:0 6px 18px rgba(26,107,94,0.12);transform:translateY(-2px);border-color:var(--primary)}
 #recommendation{font-size:18px;font-weight:600}
 
 @media (max-width:600px){.container{padding:12px;margin:16px}

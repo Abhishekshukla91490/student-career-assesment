@@ -1,8 +1,8 @@
-:root{--bg:#f7f8fb;--card:#fff;--muted:#666;--primary:#2563eb;--danger:#dc2626}
+:root{--bg:#f5f7fa;--card:#fff;--muted:#666;--primary:#1A6B5E;--accent:#FFC107;--danger:#dc2626}
 *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
 body{margin:0;background:var(--bg);color:#111}
 .admin-container{max-width:900px;margin:28px auto;padding:18px}
-header h1{margin:0;font-size:20px}
+header h1{margin:0;font-size:20px;color:var(--primary)}
 .muted{color:var(--muted);font-size:13px}
 .controls{display:flex;gap:8px;align-items:center;margin:12px 0}
 .controls input{flex:1;padding:8px;border:1px solid #ddd;border-radius:6px}
