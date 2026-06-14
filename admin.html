@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Admin Dashboard - Quiz Submissions</title>
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <main class="admin-container">
+      <header style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+        <div>
+          <h1>Quiz Submissions</h1>
+          <p class="muted">Track who filled the form, answers, and export data. (Data stored in browser localStorage)</p>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button id="logout" class="btn">Logout</button>
+        </div>
+      </header>
+
+      <section class="controls">
+        <input id="search" placeholder="Search name or email" />
+        <button id="exportCsv" class="btn primary">Export All CSV</button>
+        <button id="clearAll" class="btn danger">Clear All Submissions</button>
+      </section>
+
+      <section id="list" class="list"></section>
+
+      <template id="itemTemplate">
+        <div class="item">
+          <div class="row">
+            <div class="meta">
+              <div class="name"></div>
+              <div class="email muted"></div>
+            </div>
+            <div class="time muted"></div>
+          </div>
+          <div class="details hidden">
+            <div><strong>Recommendation:</strong> <span class="rec"></span></div>
+            <div><strong>Counts:</strong> <span class="counts"></span></div>
+            <div><strong>Answers:</strong> <span class="answers"></span></div>
+            <div><strong>Other info:</strong> <span class="other"></span></div>
+            <div class="item-actions"><button class="export btn">Export</button><button class="delete btn danger">Delete</button></div>
+          </div>
+        </div>
+      </template>
+
+    </main>
+    <script src="admin.js"></script>
+  </body>
+</html>

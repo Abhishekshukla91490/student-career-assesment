@@ -222,6 +222,24 @@ function submitQuiz(){
   lastCounts = counts;
   lastChoices = answers.map(a => a===null ? '' : (['A','B','C','D'][a]));
   lastRecommendationText = resultText;
+  // save submission to localStorage for admin tracking
+  try{
+    const submission = {
+      timestamp: new Date().toISOString(),
+      name: (document.getElementById('name')||{value:''}).value,
+      email: (document.getElementById('email')||{value:''}).value,
+      mobile: (document.getElementById('mobile')||{value:''}).value,
+      class: (document.getElementById('class')||{value:''}).value,
+      school: (document.getElementById('school')||{value:''}).value,
+      recommendation: lastRecommendationText,
+      counts: lastCounts,
+      answers: lastChoices
+    };
+    const raw = localStorage.getItem('quiz_submissions') || '[]';
+    const arr = JSON.parse(raw);
+    arr.push(submission);
+    localStorage.setItem('quiz_submissions', JSON.stringify(arr));
+  }catch(e){ console.warn('Could not save submission', e); }
   quizSection.classList.add('hidden');
   resultSection.classList.remove('hidden');
 }

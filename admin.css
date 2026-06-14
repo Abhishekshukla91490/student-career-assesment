@@ -1,0 +1,20 @@
+:root{--bg:#f7f8fb;--card:#fff;--muted:#666;--primary:#2563eb;--danger:#dc2626}
+*{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+body{margin:0;background:var(--bg);color:#111}
+.admin-container{max-width:900px;margin:28px auto;padding:18px}
+header h1{margin:0;font-size:20px}
+.muted{color:var(--muted);font-size:13px}
+.controls{display:flex;gap:8px;align-items:center;margin:12px 0}
+.controls input{flex:1;padding:8px;border:1px solid #ddd;border-radius:6px}
+.btn{padding:8px 12px;border-radius:6px;border:1px solid #ccc;background:#fff;cursor:pointer}
+.btn.primary{background:var(--primary);color:#fff;border-color:transparent}
+.btn.danger{background:var(--danger);color:#fff;border-color:transparent}
+.list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.item{background:var(--card);border:1px solid #e6e9ef;padding:12px;border-radius:8px}
+.row{display:flex;justify-content:space-between;align-items:center}
+.meta .name{font-weight:600}
+.details{margin-top:8px;font-size:14px}
+.details.hidden{display:none}
+.item-actions{margin-top:8px;display:flex;gap:8px}
+.time{font-size:12px}
+.email{font-size:13px}
