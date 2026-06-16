@@ -155,6 +155,10 @@ const questionsData = [
 const STORAGE_KEY = 'studentCareerQuizState';
 const SESSION_KEY = 'studentCareerQuizSessionId';
 
+// Set your deployed Google Apps Script Web App URL here to save submissions remotely.
+// Example: https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
+const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbye1Sb4yCGukGxUiHfMUkGt1JNvCd0rODFQrC2kqkHnELOAHzEtewaMdixfvpJT9891/exec';
+
 function getSavedState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -197,6 +201,23 @@ function clearSessionId() {
 function clearSavedState() {
   localStorage.removeItem(STORAGE_KEY);
   clearSessionId();
+}
+
+function submitToGoogleSheets(submission) {
+  if (!GOOGLE_SHEETS_ENDPOINT) return Promise.resolve(null);
+
+  return fetch(GOOGLE_SHEETS_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(submission)
+  })
+  .then(response => response.json())
+  .catch(error => {
+    console.warn('Google Sheets submission failed:', error);
+    return null;
+  });
 }
 
 function createQuizState() {
@@ -286,7 +307,7 @@ function renderQuestion(index) {
     if (answers[index] === idx) input.checked = true;
     input.addEventListener('change', () => {
       answers[index] = idx;
-      nextBtn.disabled = false;
+      nextBtn.disabled = answers[index] === null;
       updateSavedQuizState();
     });
 
@@ -423,6 +444,13 @@ function submitQuiz() {
     const arr = JSON.parse(raw);
     arr.push(submission);
     localStorage.setItem('quiz_submissions', JSON.stringify(arr));
+    
+    // Try to send to Google Sheets if endpoint is configured.
+    submitToGoogleSheets(submission).then(response => {
+      if (response && response.success) {
+        console.log('Saved to Google Sheets successfully');
+      }
+    });
   } catch (e) {
     console.warn('Could not save submission', e);
   }
