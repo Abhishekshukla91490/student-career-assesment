@@ -1,5 +1,41 @@
 function doGet(e) {
-  return ContentService.createTextOutput(JSON.stringify({success:true, message:'Google Sheets endpoint is active.'})).setMimeType(ContentService.MimeType.JSON);
+  try {
+    var sheet = SpreadsheetApp.openById('1GrkWEItMne5JWt-IG-QtI5_wguKdE9UoveyTY-awpO8').getSheetByName('Sheet1');
+    if (!sheet) {
+      return ContentService.createTextOutput(JSON.stringify({success:false, error:'Sheet not found'})).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    var data = sheet.getDataRange().getValues();
+    if (!data || data.length === 0) {
+      return ContentService.createTextOutput(JSON.stringify({submissions:[]})).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // Skip header row, convert to objects
+    var submissions = [];
+    for (var i = 1; i < data.length; i++) {
+      var row = data[i];
+      submissions.push({
+        timestamp: row[0] ? new Date(row[0]).getTime() : '',
+        name: row[1] || '',
+        email: row[2] || '',
+        mobile: row[3] || '',
+        class: row[4] || '',
+        school: row[5] || '',
+        recommendation: row[6] || '',
+        counts: {
+          DATA: row[7] || 0,
+          GRAPHICS: row[8] || 0,
+          MARKETING: row[9] || 0,
+          CONTENT_CREATOR: row[10] || 0
+        },
+        answers: (row[11] || '').split('|').filter(function(a) { return a.length > 0; })
+      });
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({submissions:submissions})).setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({success:false, error:error.toString()})).setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 function doPost(e) {
