@@ -3,6 +3,10 @@
         "/^powershell -Command \"Set-Location 'c:\\\\Users\\\\abhis\\\\Desktop\\\\quiz'; git init; git add \\.; git commit -m 'Initial quiz site commit'\"$/": {
             "approve": true,
             "matchCommandLine": true
+        },
+        "/^powershell -Command \"try \\{ \\$r = Invoke-WebRequest 'https://Abhishekshukla91490\\.github\\.io/student-career-assesment' -UseBasicParsing -TimeoutSec 20; Write-Output \\\\\"STATUS:\\$\\(\\$r\\.StatusCode\\)\\\\\"; Write-Output \\\\\"LENGTH:\\$\\(\\$r\\.Content\\.Length\\)\\\\\" \\} catch \\{ Write-Output \\\\\"ERROR:\\$\\(\\$_\\.Exception\\.Message\\)\\\\\" \\}\"$/": {
+            "approve": true,
+            "matchCommandLine": true
         }
     }
 }

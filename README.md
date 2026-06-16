@@ -1,29 +1,30 @@
 # Student Career Assessment
 
-This is a simple static replica of the assessment form. It provides a landing form and a 10-question quiz with a basic recommendation computed from answers.
+This is a static quiz app for student career recommendation. It includes:
 
-How to run:
+- A landing form to collect student name, email, mobile, class, and school
+- A 15-question assessment with shuffled questions and answers
+- Hidden category scoring for job recommendation results
+- Local persistence in `localStorage` so the quiz can resume
+- Optional Google Sheets submission via a deployed Apps Script web app
+- Admin dashboard pages: `admin-login.html` and `admin.html`
 
-Open `index.html` in your browser (double-click or serve with a static server).
+## How to run locally
 
-<<<<<<< HEAD
-Admin pages:
-- `admin-login.html` — admin login page
-- `admin.html` — admin dashboard (use after login)
+1. Open `index.html` in your browser, or
+2. Serve the folder with a static server (recommended for production-like behavior)
 
-Data notes:
-- Submissions are saved to `localStorage` in the browser. To centralize submissions, integrate a backend or Firebase.
+## Deployment
 
-=======
-Publish publicly:
+This repository includes a GitHub Actions Pages workflow at `.github/workflows/pages.yml` and a `CNAME` file for custom domain publishing.
 
-1. Create a GitHub repository and push this folder.
-2. Enable GitHub Pages in the repository settings and choose the `main` branch (or `master`) as the source.
-3. Your site will be available at `https://<your-username>.github.io/<repo-name>`.
+Expected deployment targets:
 
-Alternative hosts:
+- `https://dizitalmantrascareerassesment.com` (custom domain from `CNAME`)
+- `https://Abhishekshukla91490.github.io/student-career-assesment` (GitHub Pages fallback)
 
-- Netlify: drag this folder to Netlify Deploy or connect the repo.
-- Vercel: import the folder/repo and deploy as a static site.
-- Surge: install `npm install -g surge`, then run `surge .` from this folder.
->>>>>>> 5e0f825 (Initial commit — add quiz and admin dashboard)
+## Notes
+
+- `script.js` uses `GOOGLE_SHEETS_ENDPOINT` to submit data to Google Sheets.
+- `google_sheets_webapp.gs` is the Apps Script backend file for remote submission.
+- `admin.html` and `admin.js` show saved submissions from local storage.
