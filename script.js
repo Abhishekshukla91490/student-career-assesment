@@ -157,7 +157,7 @@ const SESSION_KEY = 'studentCareerQuizSessionId';
 
 // Set your deployed Google Apps Script Web App URL here to save submissions remotely.
 // Example: https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
-const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbye1Sb4yCGukGxUiHfMUkGt1JNvCd0rODFQrC2kqkHnELOAHzEtewaMdixfvpJT9891/exec';
+const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxWVDyLzWPAZ199fatUENDYFMswC_nnHJ-c8Xwmry3CY8QdhROcDXOnthlMNPHtL0cw/exec';
 
 function getSavedState() {
   try {
