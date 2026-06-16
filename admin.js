@@ -30,7 +30,12 @@ function renderList(filter=''){
     node.querySelector('.email').textContent = s.email || '';
     node.querySelector('.time').textContent = formatTime(s.timestamp);
     node.querySelector('.rec').textContent = s.recommendation || '';
-    node.querySelector('.counts').textContent = `A:${s.counts?.A||0} B:${s.counts?.B||0} C:${s.counts?.C||0} D:${s.counts?.D||0}`;
+    
+    // Support both old (A/B/C/D) and new (DATA/GRAPHICS/MARKETING/CONTENT_CREATOR) formats
+    const countsDisplay = s.counts && (s.counts.DATA !== undefined)
+      ? `DATA:${s.counts.DATA||0} GRAPHICS:${s.counts.GRAPHICS||0} MARKETING:${s.counts.MARKETING||0} CONTENT_CREATOR:${s.counts.CONTENT_CREATOR||0}`
+      : `A:${s.counts?.A||0} B:${s.counts?.B||0} C:${s.counts?.C||0} D:${s.counts?.D||0}`;
+    node.querySelector('.counts').textContent = countsDisplay;
     node.querySelector('.answers').textContent = (s.answers||[]).join('|');
     node.querySelector('.other').textContent = `Mobile: ${s.mobile||''} • Class: ${s.class||''} • School: ${s.school||''}`;
     const details = node.querySelector('.details');
@@ -42,8 +47,14 @@ function renderList(filter=''){
 }
 
 function exportSingle(s){
-  const header = ['timestamp','name','email','mobile','class','school','recommendation','A','B','C','D','answers'];
-  const row = [s.timestamp,s.name,s.email,s.mobile,s.class,s.school,s.recommendation,s.counts?.A||0,s.counts?.B||0,s.counts?.C||0,s.counts?.D||0,'"'+(s.answers||[]).join('|')+'"'];
+  // Support both old and new formats
+  const isNewFormat = s.counts && s.counts.DATA !== undefined;
+  const header = isNewFormat
+    ? ['timestamp','name','email','mobile','class','school','recommendation','DATA','GRAPHICS','MARKETING','CONTENT_CREATOR','answers']
+    : ['timestamp','name','email','mobile','class','school','recommendation','A','B','C','D','answers'];
+  const row = isNewFormat
+    ? [s.timestamp,s.name,s.email,s.mobile,s.class,s.school,s.recommendation,s.counts?.DATA||0,s.counts?.GRAPHICS||0,s.counts?.MARKETING||0,s.counts?.CONTENT_CREATOR||0,'"'+(s.answers||[]).join('|')+'"']
+    : [s.timestamp,s.name,s.email,s.mobile,s.class,s.school,s.recommendation,s.counts?.A||0,s.counts?.B||0,s.counts?.C||0,s.counts?.D||0,'"'+(s.answers||[]).join('|')+'"'];
   const csv = header.join(',') + '\n' + row.map(v=>typeof v==='string' && v.includes(',')? '"'+v.replace(/"/g,'""')+'"' : v).join(',');
   const blob = new Blob([csv], {type:'text/csv'});
   const url = URL.createObjectURL(blob);
@@ -59,8 +70,19 @@ function deleteSingle(ts){
 function exportAll(){
   const arr = readSubmissions();
   if(!arr.length){ alert('No submissions'); return; }
-  const header = ['timestamp','name','email','mobile','class','school','recommendation','A','B','C','D','answers'];
-  const rows = arr.map(s=>[s.timestamp,s.name,s.email,s.mobile,s.class,s.school,s.recommendation,s.counts?.A||0,s.counts?.B||0,s.counts?.C||0,s.counts?.D||0,'"'+(s.answers||[]).join('|')+'"'].map(v=>typeof v==='string' && v.includes(',')? '"'+v.replace(/"/g,'""')+'"' : v).join(','));
+  
+  // Detect format from first submission
+  const isNewFormat = arr.length > 0 && arr[0].counts && arr[0].counts.DATA !== undefined;
+  const header = isNewFormat
+    ? ['timestamp','name','email','mobile','class','school','recommendation','DATA','GRAPHICS','MARKETING','CONTENT_CREATOR','answers']
+    : ['timestamp','name','email','mobile','class','school','recommendation','A','B','C','D','answers'];
+  
+  const rows = arr.map(s=>{
+    const values = isNewFormat
+      ? [s.timestamp,s.name,s.email,s.mobile,s.class,s.school,s.recommendation,s.counts?.DATA||0,s.counts?.GRAPHICS||0,s.counts?.MARKETING||0,s.counts?.CONTENT_CREATOR||0,'"'+(s.answers||[]).join('|')+'"']
+      : [s.timestamp,s.name,s.email,s.mobile,s.class,s.school,s.recommendation,s.counts?.A||0,s.counts?.B||0,s.counts?.C||0,s.counts?.D||0,'"'+(s.answers||[]).join('|')+'"'];
+    return values.map(v=>typeof v==='string' && v.includes(',')? '"'+v.replace(/"/g,'""')+'"' : v).join(',');
+  });
   const csv = header.join(',') + '\n' + rows.join('\n');
   const blob = new Blob([csv], {type:'text/csv'});
   const url = URL.createObjectURL(blob);
