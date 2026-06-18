@@ -1,3 +1,9 @@
+// Minimal Apps Script to store only requested candidate details
+// Columns: Timestamp | Name | Phone | Recommendation | CareerPath
+
+const SPREADSHEET_ID = '1GrkWEItMne5JWt-IG-QtI5_wguKdE9UoveyTY-awpO8';
+const SHEET_NAME = 'Sheet1';
+
 function doOptions(e) {
   return ContentService.createTextOutput('')
     .setMimeType(ContentService.MimeType.TEXT)
@@ -8,105 +14,59 @@ function doOptions(e) {
 
 function doGet(e) {
   try {
-    var sheet = SpreadsheetApp.openById('1GrkWEItMne5JWt-IG-QtI5_wguKdE9UoveyTY-awpO8').getSheetByName('Sheet1');
-    if (!sheet) {
-      return ContentService.createTextOutput(JSON.stringify({success:false, error:'Sheet not found'})).setMimeType(ContentService.MimeType.JSON)
-        .addHeader('Access-Control-Allow-Origin', '*')
-        .addHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        .addHeader('Access-Control-Allow-Headers', 'Content-Type');
-    }
-    
-    var data = sheet.getDataRange().getValues();
-    if (!data || data.length === 0) {
-      return ContentService.createTextOutput(JSON.stringify({submissions:[]})).setMimeType(ContentService.MimeType.JSON)
-        .addHeader('Access-Control-Allow-Origin', '*')
-        .addHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        .addHeader('Access-Control-Allow-Headers', 'Content-Type');
-    }
-    
-    // Skip header row, convert to objects
-    var submissions = [];
-    for (var i = 1; i < data.length; i++) {
-      var row = data[i];
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName(SHEET_NAME);
+    if (!sheet) return jsonOut({success:false, error:'Sheet not found'});
+
+    const data = sheet.getDataRange().getValues();
+    const submissions = [];
+    for (let i = 1; i < data.length; i++) {
+      const r = data[i];
       submissions.push({
-        timestamp: row[0] ? new Date(row[0]).getTime() : '',
-        name: row[1] || '',
-        email: row[2] || '',
-        mobile: row[3] || '',
-        class: row[4] || '',
-        school: row[5] || '',
-        recommendation: row[6] || '',
-        counts: {
-          DATA: row[7] || 0,
-          GRAPHICS: row[8] || 0,
-          MARKETING: row[9] || 0,
-          CONTENT_CREATOR: row[10] || 0
-        },
-        answers: (row[11] || '').split('|').filter(function(a) { return a.length > 0; })
+        timestamp: r[0] ? new Date(r[0]).getTime() : '',
+        name: r[1] || '',
+        phone: r[2] || '',
+        recommendation: r[3] || '',
+        careerPath: r[4] || ''
       });
     }
-    
-    return ContentService.createTextOutput(JSON.stringify({submissions:submissions})).setMimeType(ContentService.MimeType.JSON)
-      .addHeader('Access-Control-Allow-Origin', '*')
-      .addHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-      .addHeader('Access-Control-Allow-Headers', 'Content-Type');
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({success:false, error:error.toString()})).setMimeType(ContentService.MimeType.JSON)
-      .addHeader('Access-Control-Allow-Origin', '*')
-      .addHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-      .addHeader('Access-Control-Allow-Headers', 'Content-Type');
+    return jsonOut({submissions: submissions});
+  } catch (err) {
+    return jsonOut({success:false, error: err.toString()});
   }
 }
 
 function doPost(e) {
   try {
-    if (!e) {
-      throw new Error('No event data received');
-    }
-    var raw = '';
-    if (e.postData && e.postData.contents) {
-      raw = e.postData.contents;
-    } else if (e.parameter && Object.keys(e.parameter).length > 0) {
-      raw = JSON.stringify(e.parameter);
-    }
-    if (!raw) {
-      throw new Error('No POST body received');
-    }
+    let raw = '';
+    if (e.postData && e.postData.contents) raw = e.postData.contents;
+    else if (e.parameter && Object.keys(e.parameter).length) raw = JSON.stringify(e.parameter);
+    if (!raw) return jsonOut({success:false, error:'No POST body'});
 
-    var data = JSON.parse(raw);
-    var sheet = SpreadsheetApp.openById('1GrkWEItMne5JWt-IG-QtI5_wguKdE9UoveyTY-awpO8').getSheetByName('Sheet1');
-    if (!sheet) {
-      return ContentService.createTextOutput(JSON.stringify({success:false, error:'Sheet not found'})).setMimeType(ContentService.MimeType.JSON)
-        .addHeader('Access-Control-Allow-Origin', '*')
-        .addHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        .addHeader('Access-Control-Allow-Headers', 'Content-Type');
-    }
+    const data = JSON.parse(raw);
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName(SHEET_NAME);
+    if (!sheet) return jsonOut({success:false, error:'Sheet not found'});
 
-    var row = [
+    const row = [
       new Date(),
       data.name || '',
-      data.email || '',
-      data.mobile || '',
-      data.class || '',
-      data.school || '',
+      data.phone || data.mobile || '',
       data.recommendation || '',
-      data.counts ? data.counts.DATA || 0 : 0,
-      data.counts ? data.counts.GRAPHICS || 0 : 0,
-      data.counts ? data.counts.MARKETING || 0 : 0,
-      data.counts ? data.counts.CONTENT_CREATOR || 0 : 0,
-      (data.answers || []).join('|')
+      data.careerPath || ''
     ];
 
     sheet.appendRow(row);
-
-    return ContentService.createTextOutput(JSON.stringify({success:true})).setMimeType(ContentService.MimeType.JSON)
-      .addHeader('Access-Control-Allow-Origin', '*')
-      .addHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-      .addHeader('Access-Control-Allow-Headers', 'Content-Type');
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({success:false, error:error.toString()})).setMimeType(ContentService.MimeType.JSON)
-      .addHeader('Access-Control-Allow-Origin', '*')
-      .addHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-      .addHeader('Access-Control-Allow-Headers', 'Content-Type');
+    return jsonOut({success:true});
+  } catch (err) {
+    return jsonOut({success:false, error: err.toString()});
   }
+}
+
+function jsonOut(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON)
+    .addHeader('Access-Control-Allow-Origin', '*')
+    .addHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    .addHeader('Access-Control-Allow-Headers', 'Content-Type');
 }

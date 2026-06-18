@@ -158,7 +158,7 @@ const REMOTE_QUEUE_KEY = 'studentCareerQuizRemoteQueue';
 
 // Set your deployed Google Apps Script Web App URL here to save submissions remotely.
 // Example: https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
-const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxWVDyLzWPAZ199fatUENDYFMswC_nnHJ-c8Xwmry3CY8QdhROcDXOnthlMNPHtL0cw/exec';
+const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwKBieES0cPLDEY34HLRdy6nxbY9DnGGPO7B8EFAmu6uLzgf1CDc4zKrovYrXi3dKvY/exec';
 
 function getSavedState() {
   try {
@@ -482,24 +482,39 @@ function submitQuiz() {
 
 
   try {
-    const submission = {
+    const name = (document.getElementById('name') || { value: '' }).value;
+    const email = (document.getElementById('email') || { value: '' }).value;
+    const mobile = (document.getElementById('mobile') || { value: '' }).value;
+    const cls = (document.getElementById('class') || { value: '' }).value;
+    const school = (document.getElementById('school') || { value: '' }).value;
+
+    // Keep full local submission for admin/debug export
+    const localSubmission = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
       timestamp: new Date().toISOString(),
-      name: (document.getElementById('name') || { value: '' }).value,
-      email: (document.getElementById('email') || { value: '' }).value,
-      mobile: (document.getElementById('mobile') || { value: '' }).value,
-      class: (document.getElementById('class') || { value: '' }).value,
-      school: (document.getElementById('school') || { value: '' }).value,
+      name: name,
+      email: email,
+      mobile: mobile,
+      class: cls,
+      school: school,
       recommendation: lastRecommendationText,
       counts: lastCounts,
       answers: lastChoices
     };
     const arr = getLocalSubmissions();
-    arr.push(submission);
+    arr.push(localSubmission);
     saveLocalSubmissions(arr);
 
+    // Remote payload: minimal fields only
+    const remotePayload = {
+      name: name,
+      phone: mobile,
+      recommendation: lastRecommendationText,
+      careerPath: selectedPrimaryCategory
+    };
+
     // Send to Google Sheets and queue if the network or endpoint fails.
-    sendOrQueueRemoteSubmission(submission);
+    sendOrQueueRemoteSubmission(remotePayload);
   } catch (e) {
     console.warn('Could not save submission', e);
   }

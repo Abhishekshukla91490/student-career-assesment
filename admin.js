@@ -3,7 +3,7 @@ if(!sessionStorage.getItem('quiz_admin_authed')){
   window.location.href = 'admin-login.html';
 }
 
-const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxWVDyLzWPAZ199fatUENDYFMswC_nnHJ-c8Xwmry3CY8QdhROcDXOnthlMNPHtL0cw/exec';
+const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwKBieES0cPLDEY34HLRdy6nxbY9DnGGPO7B8EFAmu6uLzgf1CDc4zKrovYrXi3dKvY/exec';
 
 async function readSubmissions(){
   try {
