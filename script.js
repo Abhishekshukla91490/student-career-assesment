@@ -154,6 +154,7 @@ const questionsData = [
 
 const STORAGE_KEY = 'studentCareerQuizState';
 const SESSION_KEY = 'studentCareerQuizSessionId';
+const REMOTE_QUEUE_KEY = 'studentCareerQuizRemoteQueue';
 
 // Set your deployed Google Apps Script Web App URL here to save submissions remotely.
 // Example: https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
@@ -186,6 +187,50 @@ function saveState(state) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function getLocalSubmissions() {
+  try {
+    return JSON.parse(localStorage.getItem('quiz_submissions') || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveLocalSubmissions(arr) {
+  localStorage.setItem('quiz_submissions', JSON.stringify(arr));
+}
+
+function getPendingRemoteQueue() {
+  try {
+    return JSON.parse(localStorage.getItem(REMOTE_QUEUE_KEY) || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+
+function savePendingRemoteQueue(arr) {
+  localStorage.setItem(REMOTE_QUEUE_KEY, JSON.stringify(arr));
+}
+
+function addToRemoteQueue(submission) {
+  const queue = getPendingRemoteQueue();
+  queue.push(submission);
+  savePendingRemoteQueue(queue);
+}
+
+async function flushRemoteQueue() {
+  const queue = getPendingRemoteQueue();
+  if (!queue.length) return;
+
+  const nextQueue = [];
+  for (const submission of queue) {
+    const response = await submitToGoogleSheets(submission);
+    if (!response || !response.success) {
+      nextQueue.push(submission);
+    }
+  }
+  savePendingRemoteQueue(nextQueue);
+}
+
 function saveSessionId(sessionId) {
   sessionStorage.setItem(SESSION_KEY, sessionId);
 }
@@ -203,21 +248,29 @@ function clearSavedState() {
   clearSessionId();
 }
 
-function submitToGoogleSheets(submission) {
-  if (!GOOGLE_SHEETS_ENDPOINT) return Promise.resolve(null);
+async function submitToGoogleSheets(submission) {
+  if (!GOOGLE_SHEETS_ENDPOINT) return null;
 
-  return fetch(GOOGLE_SHEETS_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(submission)
-  })
-  .then(response => response.json())
-  .catch(error => {
+  try {
+    const response = await fetch(GOOGLE_SHEETS_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(submission)
+    });
+    return await response.json();
+  } catch (error) {
     console.warn('Google Sheets submission failed:', error);
     return null;
-  });
+  }
+}
+
+async function sendOrQueueRemoteSubmission(submission) {
+  const result = await submitToGoogleSheets(submission);
+  if (!result || !result.success) {
+    addToRemoteQueue(submission);
+  }
 }
 
 function createQuizState() {
@@ -430,6 +483,7 @@ function submitQuiz() {
 
   try {
     const submission = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
       timestamp: new Date().toISOString(),
       name: (document.getElementById('name') || { value: '' }).value,
       email: (document.getElementById('email') || { value: '' }).value,
@@ -440,17 +494,12 @@ function submitQuiz() {
       counts: lastCounts,
       answers: lastChoices
     };
-    const raw = localStorage.getItem('quiz_submissions') || '[]';
-    const arr = JSON.parse(raw);
+    const arr = getLocalSubmissions();
     arr.push(submission);
-    localStorage.setItem('quiz_submissions', JSON.stringify(arr));
-    
-    // Try to send to Google Sheets if endpoint is configured.
-    submitToGoogleSheets(submission).then(response => {
-      if (response && response.success) {
-        console.log('Saved to Google Sheets successfully');
-      }
-    });
+    saveLocalSubmissions(arr);
+
+    // Send to Google Sheets and queue if the network or endpoint fails.
+    sendOrQueueRemoteSubmission(submission);
   } catch (e) {
     console.warn('Could not save submission', e);
   }
@@ -514,6 +563,8 @@ function downloadCSV() {
 document.addEventListener('DOMContentLoaded', () => {
   const dl = document.getElementById('downloadCsv');
   if (dl) dl.addEventListener('click', downloadCSV);
+
+  flushRemoteQueue();
 
   const savedState = getSavedState();
   const sessionId = getSessionId();
