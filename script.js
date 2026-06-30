@@ -1,165 +1,156 @@
+import { checkDuplicatePhone, saveAssessment } from "./database.js";
+
 // 15 questions with hidden category scoring: DATA, GRAPHICS, MARKETING, CONTENT_CREATOR
 const questionsData = [
   {
-    q: 'Agar tum kisi naye place par jao, to sabse pehle kya karoge?',
+    q: "Agar tum kisi naye place par jao, to sabse pehle kya karoge?",
     opts: [
-      'Aas-paas ki cheezon ko notice karunga',
-      'Logon se baat karunga',
-      'Photos ya videos lena shuru karunga',
-      'Dekhunga yahan kya interesting ho raha hai'
+      "Aas-paas ki cheezon ko notice karunga",
+      "Logon se baat karunga",
+      "Photos ya videos lena shuru karunga",
+      "Dekhunga yahan kya interesting ho raha hai",
     ],
-    categories: ['DATA', 'MARKETING', 'CONTENT_CREATOR', 'GRAPHICS']
+    categories: ["DATA", "MARKETING", "CONTENT_CREATOR", "GRAPHICS"],
   },
   {
-    q: 'Jab koi naya kaam milta hai, to tum kya karte ho?',
+    q: "Jab koi naya kaam milta hai, to tum kya karte ho?",
     opts: [
-      'Pehle observe karta hoon',
-      'Kisi se discuss karta hoon',
-      'Apna unique tareeka try karta hoon',
-      'Seedha shuru ho jaata hoon'
+      "Pehle observe karta hoon",
+      "Kisi se discuss karta hoon",
+      "Apna unique tareeka try karta hoon",
+      "Seedha shuru ho jaata hoon",
     ],
-    categories: ['DATA', 'MARKETING', 'GRAPHICS', 'CONTENT_CREATOR']
+    categories: ["DATA", "MARKETING", "GRAPHICS", "CONTENT_CREATOR"],
   },
   {
-    q: 'Tumhare dost tumhe kaise describe karenge?',
-    opts: [
-      'Creative',
-      'Friendly',
-      'Smart thinker',
-      'Leader type'
-    ],
-    categories: ['GRAPHICS', 'MARKETING', 'DATA', 'CONTENT_CREATOR']
+    q: "Tumhare dost tumhe kaise describe karenge?",
+    opts: ["Creative", "Friendly", "Smart thinker", "Leader type"],
+    categories: ["GRAPHICS", "MARKETING", "DATA", "CONTENT_CREATOR"],
   },
   {
-    q: 'Agar ek din poori tarah free ho, to tum kya karoge?',
+    q: "Agar ek din poori tarah free ho, to tum kya karoge?",
     opts: [
-      'Kuch create karunga',
-      'Friends ke saath time spend karunga',
-      'Kuch naya seekhunga',
-      'Kisi naye idea par kaam karunga'
+      "Kuch create karunga",
+      "Friends ke saath time spend karunga",
+      "Kuch naya seekhunga",
+      "Kisi naye idea par kaam karunga",
     ],
-    categories: ['GRAPHICS', 'MARKETING', 'DATA', 'CONTENT_CREATOR']
+    categories: ["GRAPHICS", "MARKETING", "DATA", "CONTENT_CREATOR"],
   },
   {
-    q: 'School/College ka kaunsa part tumhe zyada pasand aata hai?',
+    q: "School/College ka kaunsa part tumhe zyada pasand aata hai?",
     opts: [
-      'Art ya creative activities',
-      'Maths aur logical questions',
-      'Presentations aur discussions',
-      'Practical projects'
+      "Art ya creative activities",
+      "Maths aur logical questions",
+      "Presentations aur discussions",
+      "Practical projects",
     ],
-    categories: ['GRAPHICS', 'DATA', 'MARKETING', 'CONTENT_CREATOR']
+    categories: ["GRAPHICS", "DATA", "MARKETING", "CONTENT_CREATOR"],
   },
   {
-    q: 'YouTube par kis type ki videos dekhna pasand karte ho?',
+    q: "YouTube par kis type ki videos dekhna pasand karte ho?",
     opts: [
-      'Design aur creativity wali',
-      'Facts aur analysis wali',
-      'Social media aur trends wali',
-      'Business aur startup wali'
+      "Design aur creativity wali",
+      "Facts aur analysis wali",
+      "Social media aur trends wali",
+      "Business aur startup wali",
     ],
-    categories: ['GRAPHICS', 'DATA', 'MARKETING', 'CONTENT_CREATOR']
+    categories: ["GRAPHICS", "DATA", "MARKETING", "CONTENT_CREATOR"],
   },
   {
-    q: 'Agar ek project choose karna ho, to tum kya loge?',
+    q: "Agar ek project choose karna ho, to tum kya loge?",
     opts: [
-      'Poster ya design banana',
-      'Data ya information analyse karna',
-      'Presentation dena',
-      'Team ko manage karna'
+      "Poster ya design banana",
+      "Data ya information analyse karna",
+      "Presentation dena",
+      "Team ko manage karna",
     ],
-    categories: ['GRAPHICS', 'DATA', 'MARKETING', 'CONTENT_CREATOR']
+    categories: ["GRAPHICS", "DATA", "MARKETING", "CONTENT_CREATOR"],
   },
   {
-    q: 'Kaunsa game tumhe sabse zyada pasand hai?',
+    q: "Kaunsa game tumhe sabse zyada pasand hai?",
     opts: [
-      'Building ya creative games',
-      'Puzzle games',
-      'Multiplayer social games',
-      'Strategy games'
+      "Building ya creative games",
+      "Puzzle games",
+      "Multiplayer social games",
+      "Strategy games",
     ],
-    categories: ['GRAPHICS', 'DATA', 'MARKETING', 'CONTENT_CREATOR']
+    categories: ["GRAPHICS", "DATA", "MARKETING", "CONTENT_CREATOR"],
   },
   {
-    q: 'School event mein tum kya karna pasand karoge?',
+    q: "School event mein tum kya karna pasand karoge?",
     opts: [
-      'Decoration aur design',
-      'Planning aur calculations',
-      'Hosting ya anchoring',
-      'Event manage karna'
+      "Decoration aur design",
+      "Planning aur calculations",
+      "Hosting ya anchoring",
+      "Event manage karna",
     ],
-    categories: ['GRAPHICS', 'DATA', 'MARKETING', 'CONTENT_CREATOR']
+    categories: ["GRAPHICS", "DATA", "MARKETING", "CONTENT_CREATOR"],
   },
   {
-    q: 'Weekend par kya karna pasand karoge?',
+    q: "Weekend par kya karna pasand karoge?",
     opts: [
-      'Kuch naya create karna',
-      'Brain games khelna',
-      'Friends ke saath hangout',
-      'Nayi opportunities explore karna'
+      "Kuch naya create karna",
+      "Brain games khelna",
+      "Friends ke saath hangout",
+      "Nayi opportunities explore karna",
     ],
-    categories: ['GRAPHICS', 'DATA', 'MARKETING', 'CONTENT_CREATOR']
+    categories: ["GRAPHICS", "DATA", "MARKETING", "CONTENT_CREATOR"],
   },
   {
-    q: 'Future mein tum kis cheez ke liye yaad kiye jana chahoge?',
+    q: "Future mein tum kis cheez ke liye yaad kiye jana chahoge?",
     opts: [
-      'Creativity ke liye',
-      'Intelligence ke liye',
-      'Communication skills ke liye',
-      'Leadership ke liye'
+      "Creativity ke liye",
+      "Intelligence ke liye",
+      "Communication skills ke liye",
+      "Leadership ke liye",
     ],
-    categories: ['GRAPHICS', 'DATA', 'MARKETING', 'CONTENT_CREATOR']
+    categories: ["GRAPHICS", "DATA", "MARKETING", "CONTENT_CREATOR"],
   },
   {
-    q: 'Tumhara dream work environment kaisa hoga?',
+    q: "Tumhara dream work environment kaisa hoga?",
     opts: [
-      'Creative aur colorful',
-      'Organized aur logical',
-      'Energetic aur social',
-      'Fast-paced aur challenging'
+      "Creative aur colorful",
+      "Organized aur logical",
+      "Energetic aur social",
+      "Fast-paced aur challenging",
     ],
-    categories: ['GRAPHICS', 'DATA', 'MARKETING', 'CONTENT_CREATOR']
+    categories: ["GRAPHICS", "DATA", "MARKETING", "CONTENT_CREATOR"],
   },
   {
-    q: '5 saal baad tum khud ko kaise dekhte ho?',
+    q: "5 saal baad tum khud ko kaise dekhte ho?",
     opts: [
-      'Kuch unique create karte hue',
-      'Kisi skill mein expert bante hue',
-      'Bahut saare logon se connected',
-      'Apne decisions khud lete hue'
+      "Kuch unique create karte hue",
+      "Kisi skill mein expert bante hue",
+      "Bahut saare logon se connected",
+      "Apne decisions khud lete hue",
     ],
-    categories: ['GRAPHICS', 'DATA', 'MARKETING', 'CONTENT_CREATOR']
+    categories: ["GRAPHICS", "DATA", "MARKETING", "CONTENT_CREATOR"],
   },
   {
-    q: 'Party mein tum usually kya karte ho?',
+    q: "Party mein tum usually kya karte ho?",
     opts: [
-      'Thode logon ke saath rehta hoon',
-      'Sabse milta-julta hoon',
-      'Fun activities enjoy karta hoon',
-      'Group ko organize karta hoon'
+      "Thode logon ke saath rehta hoon",
+      "Sabse milta-julta hoon",
+      "Fun activities enjoy karta hoon",
+      "Group ko organize karta hoon",
     ],
-    categories: ['DATA', 'MARKETING', 'GRAPHICS', 'CONTENT_CREATOR']
+    categories: ["DATA", "MARKETING", "GRAPHICS", "CONTENT_CREATOR"],
   },
   {
-    q: 'Group discussion mein tumhara role kya hota hai?',
+    q: "Group discussion mein tumhara role kya hota hai?",
     opts: [
-      'Ideas dena',
-      'Sunna aur analyse karna',
-      'Sabko engage rakhna',
-      'Direction dena'
+      "Ideas dena",
+      "Sunna aur analyse karna",
+      "Sabko engage rakhna",
+      "Direction dena",
     ],
-    categories: ['GRAPHICS', 'DATA', 'MARKETING', 'CONTENT_CREATOR']
-  }
+    categories: ["GRAPHICS", "DATA", "MARKETING", "CONTENT_CREATOR"],
+  },
 ];
 
-const STORAGE_KEY = 'studentCareerQuizState';
-const SESSION_KEY = 'studentCareerQuizSessionId';
-const REMOTE_QUEUE_KEY = 'studentCareerQuizRemoteQueue';
-
-// Set your deployed Google Apps Script Web App URL here to save submissions remotely.
-// Example: https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
-const GOOGLE_SHEETS_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbzxqJDJtgmyT-_Lo4LxPZt6XTzIsF6QUjqNReLPhf9d-inTCS-m5HzrcqKwKzpVmTcU/exec";
+const STORAGE_KEY = "studentCareerQuizState";
+const SESSION_KEY = "studentCareerQuizSessionId";
 
 function getSavedState() {
   try {
@@ -168,7 +159,7 @@ function getSavedState() {
     const state = JSON.parse(raw);
     if (
       state.version === 1 &&
-      typeof state.sessionId === 'string' &&
+      typeof state.sessionId === "string" &&
       Array.isArray(state.questionOrder) &&
       state.questionOrder.length === questionsData.length &&
       Array.isArray(state.optionOrder) &&
@@ -179,7 +170,7 @@ function getSavedState() {
       return state;
     }
   } catch (error) {
-    console.warn('Failed to load saved quiz state:', error);
+    console.warn("Failed to load saved quiz state:", error);
   }
   return null;
 }
@@ -188,49 +179,6 @@ function saveState(state) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-function getLocalSubmissions() {
-  try {
-    return JSON.parse(localStorage.getItem('quiz_submissions') || '[]');
-  } catch (e) {
-    return [];
-  }
-}
-
-function saveLocalSubmissions(arr) {
-  localStorage.setItem('quiz_submissions', JSON.stringify(arr));
-}
-
-function getPendingRemoteQueue() {
-  try {
-    return JSON.parse(localStorage.getItem(REMOTE_QUEUE_KEY) || '[]');
-  } catch (e) {
-    return [];
-  }
-}
-
-function savePendingRemoteQueue(arr) {
-  localStorage.setItem(REMOTE_QUEUE_KEY, JSON.stringify(arr));
-}
-
-function addToRemoteQueue(submission) {
-  const queue = getPendingRemoteQueue();
-  queue.push(submission);
-  savePendingRemoteQueue(queue);
-}
-
-async function flushRemoteQueue() {
-  const queue = getPendingRemoteQueue();
-  if (!queue.length) return;
-
-  const nextQueue = [];
-  for (const submission of queue) {
-    const response = await submitToGoogleSheets(submission);
-    if (!response || !response.success) {
-      nextQueue.push(submission);
-    }
-  }
-  savePendingRemoteQueue(nextQueue);
-}
 
 function saveSessionId(sessionId) {
   sessionStorage.setItem(SESSION_KEY, sessionId);
@@ -249,31 +197,6 @@ function clearSavedState() {
   clearSessionId();
 }
 
-async function submitToGoogleSheets(submission) {
-  if (!GOOGLE_SHEETS_ENDPOINT) return null;
-
-  try {
-    const response = await fetch(GOOGLE_SHEETS_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(submission)
-    });
-    return await response.json();
-  } catch (error) {
-    console.warn('Google Sheets submission failed:', error);
-    return null;
-  }
-}
-
-async function sendOrQueueRemoteSubmission(submission) {
-  const result = await submitToGoogleSheets(submission);
-  if (!result || !result.success) {
-    addToRemoteQueue(submission);
-  }
-}
-
 function createQuizState() {
   const questionOrder = questionsData.map((_, index) => index);
   const optionOrder = questionsData.map(() => [0, 1, 2, 3]);
@@ -284,9 +207,9 @@ function createQuizState() {
     sessionId,
     started: true,
     questionOrder: fisherYatesShuffle(questionOrder),
-    optionOrder: optionOrder.map(order => fisherYatesShuffle(order)),
+    optionOrder: optionOrder.map((order) => fisherYatesShuffle(order)),
     answers: new Array(questionsData.length).fill(null),
-    current: 0
+    current: 0,
   };
 }
 
@@ -296,12 +219,15 @@ function buildQuestionsFromState(state) {
     const optionMap = state.optionOrder[questionPosition];
     return {
       q: baseQuestion.q,
-      opts: optionMap.map(index => baseQuestion.opts[index]),
-      categories: optionMap.map(index => baseQuestion.categories[index])
+      opts: optionMap.map((index) => baseQuestion.opts[index]),
+      categories: optionMap.map((index) => baseQuestion.categories[index]),
     };
   });
-  answers = state.answers.map(answer => (answer === null ? null : answer));
-  current = typeof state.current === 'number' ? Math.max(0, Math.min(state.current, questions.length - 1)) : 0;
+  answers = state.answers.map((answer) => (answer === null ? null : answer));
+  current =
+    typeof state.current === "number"
+      ? Math.max(0, Math.min(state.current, questions.length - 1))
+      : 0;
 }
 
 function updateSavedQuizState() {
@@ -329,43 +255,43 @@ let lastCounts = null;
 let lastChoices = null;
 let lastRecommendationText = null;
 
-const entryForm = document.getElementById('entryForm');
-const quizSection = document.getElementById('quiz');
-const entrySection = document.getElementById('entry');
-const resultSection = document.getElementById('result');
-const quizForm = document.getElementById('quizForm');
-const qIndexEl = document.getElementById('qIndex');
-const qTotalEl = document.getElementById('qTotal');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const recommendationEl = document.getElementById('recommendation');
-const retakeBtn = document.getElementById('retake');
+const entryForm = document.getElementById("entryForm");
+const quizSection = document.getElementById("quiz");
+const entrySection = document.getElementById("entry");
+const resultSection = document.getElementById("result");
+const quizForm = document.getElementById("quizForm");
+const qIndexEl = document.getElementById("qIndex");
+const qTotalEl = document.getElementById("qTotal");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const recommendationEl = document.getElementById("recommendation");
+const retakeBtn = document.getElementById("retake");
 
 function renderQuestion(index) {
-  quizForm.innerHTML = '';
+  quizForm.innerHTML = "";
   const question = questions[index];
-  const heading = document.createElement('h3');
+  const heading = document.createElement("h3");
   heading.textContent = question.q;
   quizForm.appendChild(heading);
 
   question.opts.forEach((opt, idx) => {
     const id = `q${index}_opt${idx}`;
-    const label = document.createElement('label');
-    label.className = 'option';
+    const label = document.createElement("label");
+    label.className = "option";
 
-    const input = document.createElement('input');
-    input.type = 'radio';
+    const input = document.createElement("input");
+    input.type = "radio";
     input.name = `q${index}`;
     input.value = idx;
     input.id = id;
     if (answers[index] === idx) input.checked = true;
-    input.addEventListener('change', () => {
+    input.addEventListener("change", () => {
       answers[index] = idx;
       nextBtn.disabled = answers[index] === null;
       updateSavedQuizState();
     });
 
-    const span = document.createElement('span');
+    const span = document.createElement("span");
     span.textContent = opt;
 
     label.appendChild(input);
@@ -377,18 +303,18 @@ function renderQuestion(index) {
   qTotalEl.textContent = questions.length;
   prevBtn.disabled = index === 0;
   nextBtn.disabled = answers[index] === null;
-  nextBtn.textContent = index === questions.length - 1 ? 'Submit' : 'Next';
+  nextBtn.textContent = index === questions.length - 1 ? "Submit" : "Next";
   current = index;
   updateSavedQuizState();
 }
 
-prevBtn.addEventListener('click', () => {
+prevBtn.addEventListener("click", () => {
   if (current > 0) {
     renderQuestion(current - 1);
   }
 });
 
-nextBtn.addEventListener('click', () => {
+nextBtn.addEventListener("click", () => {
   if (current < questions.length - 1) {
     renderQuestion(current + 1);
   } else {
@@ -398,47 +324,95 @@ nextBtn.addEventListener('click', () => {
 
 function formatCategoryDisplay(key) {
   const display = {
-    DATA: 'Analytical Thinking',
-    GRAPHICS: 'Creative Design',
-    MARKETING: 'Marketing & Communication',
-    CONTENT_CREATOR: 'Content Creator'
+    DATA: "Analytical Thinking",
+    GRAPHICS: "Creative Design",
+    MARKETING: "Marketing & Communication",
+    CONTENT_CREATOR: "Content Creator",
   };
   return display[key] || key;
 }
 
 function getCategoryRecommendations(key) {
   const recommendations = {
-    DATA: ['Data Analytics', 'MIS Executive', 'Advanced Excel'],
-    GRAPHICS: ['Graphic Designing', 'VFX Creator'],
-    MARKETING: ['Digital Marketing', 'Social Media Marketing'],
-    CONTENT_CREATOR: ['Video Editing', 'Animation', 'Motion Graphics', 'Content Creation']
+    DATA: ["Data Analytics", "MIS Executive", "Advanced Excel"],
+    GRAPHICS: ["Graphic Designing", "VFX Creator"],
+    MARKETING: ["Digital Marketing", "Social Media Marketing"],
+    CONTENT_CREATOR: [
+      "Video Editing",
+      "Animation",
+      "Motion Graphics",
+      "Content Creation",
+    ],
   };
   return recommendations[key] || [];
 }
 
 function getCategoryDescription(key) {
   const descriptions = {
-    DATA: 'Aap facts, analysis aur logic mein majboot interest rakhte hain. Data-driven decisions aapke style mein hote hain.',
-    GRAPHICS: 'Aap creative thinking, design aur visual expression mein apni strength dhoondte hain.',
-    MARKETING: 'Aap audience, communication aur trend-based strategies mein prakashit hote hain.',
-    CONTENT_CREATOR: 'Aap storytelling, content creation aur audience engagement ko enjoy karte hain.'
+    DATA: "Aap facts, analysis aur logic mein majboot interest rakhte hain. Data-driven decisions aapke style mein hote hain.",
+    GRAPHICS:
+      "Aap creative thinking, design aur visual expression mein apni strength dhoondte hain.",
+    MARKETING:
+      "Aap audience, communication aur trend-based strategies mein prakashit hote hain.",
+    CONTENT_CREATOR:
+      "Aap storytelling, content creation aur audience engagement ko enjoy karte hain.",
   };
-  return descriptions[key] || '';
+  return descriptions[key] || "";
 }
 
-function submitQuiz() {
-  const unanswered = answers.filter(answer => answer === null).length;
+async function submitQuiz() {
+  const unanswered = answers.filter((answer) => answer === null).length;
   if (unanswered > 0) {
-    if (!confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`)) {
+    if (
+      !confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`)
+    ) {
       return;
     }
   }
 
+  // --- Disable button and show spinner BEFORE async duplicate check ---
+  nextBtn.disabled = true;
+  const originalBtnText = nextBtn.textContent;
+
+  if (!document.getElementById("spinner-styles")) {
+    const style = document.createElement("style");
+    style.id = "spinner-styles";
+    style.innerHTML = `@keyframes spin { to { transform: rotate(360deg); } }`;
+    document.head.appendChild(style);
+  }
+
+  nextBtn.innerHTML = `<span class="spinner" style="display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;"></span>Saving Assessment...`;
+
+  const name = (document.getElementById("name") || { value: "" }).value.trim();
+  const phone = (document.getElementById("mobile") || { value: "" }).value.trim();
+
+  // --- Check duplicate phone FIRST, before any result rendering ---
+  const isDuplicate = await checkDuplicatePhone(phone);
+  if (isDuplicate) {
+    // Restore button
+    nextBtn.disabled = false;
+    nextBtn.textContent = originalBtnText;
+
+    // Show duplicate warning inside the quiz form
+    const existingWarning = document.getElementById("duplicateWarning");
+    if (existingWarning) existingWarning.remove();
+
+    const warning = document.createElement("p");
+    warning.id = "duplicateWarning";
+    warning.style.cssText =
+      "margin-top:12px;padding:8px 12px;background:#f8d7da;border:1px solid #f5c6cb;" +
+      "border-radius:6px;font-size:0.9rem;color:#721c24;text-align:center;";
+    warning.textContent = "You have already completed this assessment.";
+    quizForm.appendChild(warning);
+    return;
+  }
+
+  // --- Score calculation ---
   const counts = {
     DATA: 0,
     GRAPHICS: 0,
     MARKETING: 0,
-    CONTENT_CREATOR: 0
+    CONTENT_CREATOR: 0,
   };
 
   answers.forEach((answerIndex, questionIndex) => {
@@ -450,22 +424,30 @@ function submitQuiz() {
   });
 
   const total = questions.length;
-  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  const sorted = Object.entries(counts).sort(
+    (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
+  );
   const scoreGroups = [...new Set(sorted.map(([, value]) => value))];
-  const primaryCategories = sorted.filter(([, value]) => value === scoreGroups[0]).map(([key]) => key);
-  
+  const primaryCategories = sorted
+    .filter(([, value]) => value === scoreGroups[0])
+    .map(([key]) => key);
+
   // Pick the first category when there's a tie
   const selectedPrimaryCategory = primaryCategories[0];
 
   const primaryLabel = formatCategoryDisplay(selectedPrimaryCategory);
   const primaryCourses = getCategoryRecommendations(selectedPrimaryCategory);
-  const primaryCoursesHtml = primaryCourses.map(course => `<li>${course}</li>`).join('');
-  const breakdownHtml = Object.entries(counts).map(([key, value]) => {
-    const percent = Math.round((value / total) * 100);
-    return `<li><strong>${formatCategoryDisplay(key)}</strong> (${value}/${total}) — ${percent}%</li>`;
-  }).join('');
+  const primaryCoursesHtml = primaryCourses
+    .map((course) => `<li>${course}</li>`)
+    .join("");
+  const breakdownHtml = Object.entries(counts)
+    .map(([key, value]) => {
+      const percent = Math.round((value / total) * 100);
+      return `<li><strong>${formatCategoryDisplay(key)}</strong> (${value}/${total}) — ${percent}%</li>`;
+    })
+    .join("");
 
-  let resultHtml = `
+  const resultHtml = `
     <div class="result-summary">
       <h3>Primary Recommendation</h3>
       <p>${primaryLabel}</p>
@@ -478,124 +460,130 @@ function submitQuiz() {
 
   recommendationEl.innerHTML = resultHtml;
   lastCounts = counts;
-  lastChoices = answers.map((answerIndex, questionIndex) => answerIndex === null ? '' : questions[questionIndex].categories[answerIndex]);
+  lastChoices = answers.map((answerIndex, questionIndex) =>
+    answerIndex === null
+      ? ""
+      : questions[questionIndex].categories[answerIndex],
+  );
   lastRecommendationText = primaryLabel;
 
+  // --- Compile Firestore payload ---
+  const payload = {
+    name: name,
+    phone: phone,
+    primaryRecommendation: primaryLabel,
+    suggestedCourses: primaryCourses,
+    scores: {
+      analytical: counts.DATA,
+      creative: counts.GRAPHICS,
+      marketing: counts.MARKETING,
+      contentCreator: counts.CONTENT_CREATOR,
+    },
+    percentages: {
+      analytical: Math.round((counts.DATA / total) * 100),
+      creative: Math.round((counts.GRAPHICS / total) * 100),
+      marketing: Math.round((counts.MARKETING / total) * 100),
+      contentCreator: Math.round((counts.CONTENT_CREATOR / total) * 100),
+    },
+  };
 
-  try {
-    const name = (document.getElementById('name') || { value: '' }).value;
-    const email = (document.getElementById('email') || { value: '' }).value;
-    const mobile = (document.getElementById('mobile') || { value: '' }).value;
-    const cls = (document.getElementById('class') || { value: '' }).value;
-    const school = (document.getElementById('school') || { value: '' }).value;
+  // --- Save to Firestore (result page always shows regardless of save outcome) ---
+  const saveSuccess = await saveAssessment(payload);
 
-    // Keep full local submission for admin/debug export
-    const localSubmission = {
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
-      timestamp: new Date().toISOString(),
-      name: name,
-      email: email,
-      mobile: mobile,
-      class: cls,
-      school: school,
-      recommendation: lastRecommendationText,
-      counts: lastCounts,
-      answers: lastChoices
-    };
-    const arr = getLocalSubmissions();
-    arr.push(localSubmission);
-    saveLocalSubmissions(arr);
-
-    // Remote payload: minimal fields only
-    const remotePayload = {
-      name: name,
-      phone: mobile,
-      recommendation: lastRecommendationText,
-      careerPath: selectedPrimaryCategory
-    };
-
-    // Send to Google Sheets and queue if the network or endpoint fails.
-    sendOrQueueRemoteSubmission(remotePayload);
-  } catch (e) {
-    console.warn('Could not save submission', e);
-  }
-
+  // Always navigate to result page
   clearSavedState();
-  quizSection.classList.add('hidden');
-  resultSection.classList.remove('hidden');
+  quizSection.classList.add("hidden");
+  resultSection.classList.remove("hidden");
+
+  if (!saveSuccess) {
+    showSaveWarning();
+  }
+}
+
+function showSaveWarning() {
+  if (document.getElementById("saveWarning")) return;
+  const warning = document.createElement("p");
+  warning.id = "saveWarning";
+  warning.style.cssText =
+    "margin-top:12px;padding:8px 12px;background:#fff3cd;border:1px solid #ffc107;" +
+    "border-radius:6px;font-size:0.9rem;color:#856404;text-align:center;";
+  warning.textContent = "Your assessment is complete, but we couldn't save your information.";
+  resultSection.appendChild(warning);
 }
 
 function downloadCSV() {
   if (!lastCounts) {
-    alert('No result available to export. Please complete the quiz first.');
+    alert("No result available to export. Please complete the quiz first.");
     return;
   }
-  const name = (document.getElementById('name') || { value: '' }).value.replace(/\n/g, ' ').replace(/"/g, '""');
-  const email = (document.getElementById('email') || { value: '' }).value.replace(/\n/g, ' ').replace(/"/g, '""');
-  const mobile = (document.getElementById('mobile') || { value: '' }).value.replace(/\n/g, ' ').replace(/"/g, '""');
-  const cls = (document.getElementById('class') || { value: '' }).value.replace(/\n/g, ' ').replace(/"/g, '""');
-  const school = (document.getElementById('school') || { value: '' }).value.replace(/\n/g, ' ').replace(/"/g, '""');
+  const name = (document.getElementById("name") || { value: "" }).value
+    .replace(/\n/g, " ")
+    .replace(/"/g, '""');
+  const mobile = (document.getElementById("mobile") || { value: "" }).value
+    .replace(/\n/g, " ")
+    .replace(/"/g, '""');
   const timestamp = new Date().toISOString();
   const header = [
-    'timestamp',
-    'name',
-    'email',
-    'mobile',
-    'class',
-    'school',
-    'recommendation',
-    'DATA_count',
-    'GRAPHICS_count',
-    'MARKETING_count',
-    'CONTENT_CREATOR_count',
-    'answers'
+    "timestamp",
+    "name",
+    "mobile",
+    "recommendation",
+    "DATA_count",
+    "GRAPHICS_count",
+    "MARKETING_count",
+    "CONTENT_CREATOR_count",
+    "answers",
   ];
   const row = [
     timestamp,
     name,
-    email,
     mobile,
-    cls,
-    school,
     lastRecommendationText,
     lastCounts.DATA,
     lastCounts.GRAPHICS,
     lastCounts.MARKETING,
     lastCounts.CONTENT_CREATOR,
-    '"' + lastChoices.join('|') + '"'
+    '"' + lastChoices.join("|") + '"',
   ];
-  const csv = header.join(',') + '\n' + row.map(v => typeof v === 'string' && v.includes(',') ? '"' + v.replace(/"/g, '""') + '"' : v).join(',');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const csv =
+    header.join(",") +
+    "\n" +
+    row
+      .map((v) =>
+        typeof v === "string" && v.includes(",")
+          ? '"' + v.replace(/"/g, '""') + '"'
+          : v,
+      )
+      .join(",");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
-  a.download = `quiz_result_${timestamp.replace(/[:.]/g, '-')}.csv`;
+  a.download = `quiz_result_${timestamp.replace(/[:.]/g, "-")}.csv`;
   document.body.appendChild(a);
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const dl = document.getElementById('downloadCsv');
-  if (dl) dl.addEventListener('click', downloadCSV);
-
-  flushRemoteQueue();
+document.addEventListener("DOMContentLoaded", () => {
+  const dl = document.getElementById("downloadCsv");
+  if (dl) dl.addEventListener("click", downloadCSV);
 
   const savedState = getSavedState();
   const sessionId = getSessionId();
   if (savedState && sessionId && savedState.sessionId === sessionId) {
     quizState = savedState;
     buildQuestionsFromState(quizState);
-    entrySection.classList.add('hidden');
-    quizSection.classList.remove('hidden');
+    entrySection.classList.add("hidden");
+    quizSection.classList.remove("hidden");
     renderQuestion(current);
   } else {
     clearSavedState();
   }
 });
 
-retakeBtn.addEventListener('click', () => {
+retakeBtn.addEventListener("click", () => {
   clearSavedState();
   quizState = null;
   questions = [];
@@ -604,13 +592,13 @@ retakeBtn.addEventListener('click', () => {
   lastCounts = null;
   lastChoices = null;
   lastRecommendationText = null;
-  resultSection.classList.add('hidden');
-  quizSection.classList.add('hidden');
-  entrySection.classList.remove('hidden');
+  resultSection.classList.add("hidden");
+  quizSection.classList.add("hidden");
+  entrySection.classList.remove("hidden");
   entryForm.reset();
 });
 
-entryForm.addEventListener('submit', (e) => {
+entryForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const savedState = getSavedState();
   const sessionId = getSessionId();
@@ -622,8 +610,8 @@ entryForm.addEventListener('submit', (e) => {
   }
   saveState(quizState);
   buildQuestionsFromState(quizState);
-  entrySection.classList.add('hidden');
-  quizSection.classList.remove('hidden');
-  resultSection.classList.add('hidden');
+  entrySection.classList.add("hidden");
+  quizSection.classList.remove("hidden");
+  resultSection.classList.add("hidden");
   renderQuestion(current);
 });

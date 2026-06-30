@@ -6,7 +6,8 @@ This is a static quiz app for student career recommendation. It includes:
 - A 15-question assessment with shuffled questions and answers
 - Hidden category scoring for job recommendation results
 - Local persistence in `localStorage` so the quiz can resume
-- Optional Google Sheets submission via a deployed Apps Script web app
+- Shared backend storage via simple API endpoints for multiuser submissions
+- Local backup in browser `localStorage` when the backend is unavailable
 - Admin dashboard pages: `admin-login.html` and `admin.html`
 
 ## How to run locally
@@ -25,6 +26,7 @@ Expected deployment targets:
 
 ## Notes
 
-- `script.js` uses `GOOGLE_SHEETS_ENDPOINT` to submit data to Google Sheets.
-- `google_sheets_webapp.gs` is the Apps Script backend file for remote submission.
+- `script.js` saves quiz submissions locally to `localStorage`, and also sends them to `/api/submit`.
+- `admin.js` reads submissions from `/api/fetch` and falls back to local storage if the backend is unavailable.
+- Add a Supabase table named `quiz_submissions` and configure `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` as environment variables for Vercel.
 - `admin.html` and `admin.js` show saved submissions from local storage.
